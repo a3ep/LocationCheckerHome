@@ -21,7 +21,7 @@ class DistanceCalculator {
                     Math.cos(Math.toRadians(lat)) * Math.cos(Math.toRadians(tLat)) *
                     Math.sin(dLng/2) * Math.sin(dLng/2)
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-        def dist = (float) (earthRadius * c)
+        def dist = earthRadius * c
         return dist
     }
 }
