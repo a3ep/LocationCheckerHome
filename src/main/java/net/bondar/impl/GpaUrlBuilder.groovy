@@ -10,22 +10,22 @@ class GpaUrlBuilder implements UrlBuilder{
     private final String MAIN_URL_PART = loader.loadParameter("placeSearchRequest")
     private final String GPA_KEY = loader.loadParameter("gpaKey")
     private final String PLACE_TYPES = loader.loadParameter("placeTypes")
-    private String latitude
-    private String longitude
-    private String radius
+    private def latitude
+    private def longitude
+    private def pageToken
 
-    GpaUrlBuilder(){}
-    GpaUrlBuilder(def latitude, def longitude, def radius){
+    GpaUrlBuilder(def latitude, def longitude){
         this.latitude = latitude
         this.longitude = longitude
-        this.radius = radius
     }
-
+    GpaUrlBuilder(def pageToken){
+        this.pageToken = pageToken
+    }
     @Override
-    URL buildURL() {
-        return buildURL(latitude, longitude, radius)
+    def  build(){
+        if(pageToken) return buildURL(pageToken)
+        return buildURL(latitude, longitude)
     }
-
     /**
      * Builds GPA url
      * @param latitude - specified LATITUDE
@@ -33,12 +33,20 @@ class GpaUrlBuilder implements UrlBuilder{
      * @param radius - search radius
      * @return GPA url
      */
-    def buildURL(def latitude, def longitude, def radius){
+    def buildURL(def latitude, def longitude/*, def radius*/){
         StringBuilder urlBuilder = new StringBuilder(MAIN_URL_PART)
         urlBuilder.append("location=" + latitude + "," + longitude)
 //        urlBuilder.append("&radius=" + radius)
         urlBuilder.append("&rankby=distance")
         urlBuilder.append("&types="+ PLACE_TYPES)
+        urlBuilder.append("&key=" + GPA_KEY)
+        println urlBuilder.toString()
+        return new URL(urlBuilder.toString())
+    }
+
+    def buildURL(def pageToken){
+        StringBuilder urlBuilder = new StringBuilder(MAIN_URL_PART)
+        urlBuilder.append("pagetoken="+pageToken)
         urlBuilder.append("&key=" + GPA_KEY)
         println urlBuilder.toString()
         return new URL(urlBuilder.toString())

@@ -17,7 +17,7 @@ class ParamsChecker {
     }
 
     def checkParams(def params){
-        cli = new CliBuilder(usage: 'MainWorker.groovy -json ', header: 'Options:')
+        cli = new CliBuilder(usage: 'Service.groovy -json ', header: 'Options:')
         cli.help('Print this message')
         cli.json(args: 4, valueSeparator: ',', argsName: 'LATITUDE,LONGITUDE,maxRequestCount,maxResultCount', 'Provide necessary params for searching')
 

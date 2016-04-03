@@ -10,32 +10,24 @@ class PlaceFilter implements Filter{
     private ResultObject result
     private String latitude
     private String longitude
-    private def minDistance
+    private def placeCount
     private DistanceCalculator dCalculator
-    private UrlBuilder urlBuilder
-    private JSONConverter jConverter= new JSONConverter(new JsonBuilder(), new JsonSlurper())
-    private DataChecker dataChecker
-    private DataParser dataParser
 
-    PlaceFilter(ResultObject result, def latitude, def longitude, def minDistance, DistanceCalculator calculator, DataChecker dataChecker, DataParser dataParser){
+    PlaceFilter(ResultObject result, def latitude, def longitude, def placeCount, DistanceCalculator calculator){
         this.result = result
         this.latitude = latitude
         this.longitude = longitude
-        this.minDistance = minDistance
+        this.placeCount = placeCount
         this.dCalculator = calculator
-        this.dataChecker = dataChecker
-        this.dataParser = dataParser
     }
 
     @Override
     def doFilter() {
-        def number=0
-        if (result.places.size()==1){
-            println result
+        if (placeCount==1){
+
+            return result
         }
-        String targetLat = result.places.get(0).latitude
-        String targetLng = result.places.get(0).longitude
-        double targetMinDist = dCalculator.calculateDistance(latitude, longitude, targetLat, targetLng)
+        double targetMinDist = dCalculator.calculateDistance(latitude, longitude, result.places.get(0).latitude, result.places.get(0).longitude)
         ArrayList<Place> sameLocations = new ArrayList()
         ArrayList<Place> closestLocation = new ArrayList()
 
@@ -47,30 +39,22 @@ class PlaceFilter implements Filter{
                 sameLocations.add(result.places.get(i))
                 continue
             }
-            if (targetDistance <=> targetMinDist == -1) {
-                targetMinDist = targetDistance
-                number=i
-            }
+//            if (targetDistance <=> targetMinDist == -1) {
+//                targetMinDist = targetDistance
+//                number=i
+//            }
         }
-        if(/*result.places.size()<20 && */sameLocations.size()!=0){
+        if(sameLocations.size()!=0){
             result.places=sameLocations
             return result
         }
-//        if(result.places.size()<20){
-            closestLocation.add(result.places.remove(number))
-            result.places.each{
-                if(dCalculator.calculateDistance(latitude, longitude, it.latitude, it.longitude)<=> targetMinDist == 0){
-                    closestLocation.add(it)
-                }
+        closestLocation.add(result.places.remove(0))
+        result.places.each{
+            if(dCalculator.calculateDistance(latitude, longitude, it.latitude, it.longitude)<=>targetMinDist == 0){
+                closestLocation.add(it)
             }
-            result.places=closestLocation
-            return result
-//        }
-//        minDistance=targetMinDist
-//        urlBuilder = new GpaUrlBuilder(latitude, longitude, minDistance)
-//        def responseObject = jConverter.toObject(dataChecker.getResponseData(urlBuilder.buildURL()))
-//        result = dataParser.parse(responseObject)
-//        result = doFilter()
-//        return result
+        }
+        result.places=closestLocation
+        return result
     }
 }

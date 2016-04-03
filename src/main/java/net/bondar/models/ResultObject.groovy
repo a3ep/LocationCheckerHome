@@ -3,7 +3,7 @@ package net.bondar.models
 class ResultObject {
     private final def STATUS
     private List<Place> places
-    private final String ERROR_MESSAGE
+    private final String ERROR_MESSAGE = ""
 
     ResultObject(def status){
         this.STATUS = status
