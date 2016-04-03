@@ -28,6 +28,8 @@ class Service {
         def longitude="34.988425"
         def placeCount = 2
         /*Checking input params*/
+        ParamsChecker paramsChecker = new ParamsChecker()
+        def checkedParams = paramsChecker.checkParams(args.size()>0?args:["-help"])
 
         Service service = new Service(new GpaUrlBuilder(latitude, longitude), new GpaDataChecker(), new GpaDataParser(), new GroovyJsonConverter(new JsonBuilder(), new JsonSlurper()))
         /* Builds GPA url*/
