@@ -26,10 +26,10 @@ class Service {
         def resultJson
         def latitude="48.5086468"
         def longitude="34.988425"
-        def placeCount
+        def placeCount = 2
         /*Checking input params*/
 
-        Service service = new Service(new GpaUrlBuilder(latitude, longitude), new GpaDataChecker(), new GpaDataParser(), new JSONConverter(new JsonBuilder(), new JsonSlurper()))
+        Service service = new Service(new GpaUrlBuilder(latitude, longitude), new GpaDataChecker(), new GpaDataParser(), new GroovyJsonConverter(new JsonBuilder(), new JsonSlurper()))
         /* Builds GPA url*/
         URL completeGpaUrl = service.urlBuilder.build()
 
@@ -48,16 +48,12 @@ class Service {
             }
         }
         println(responseObject)
+
         /*Getting the list of places from GPA response object*/
         ResultObject resultObject = service.dataParser.parse(responseObject)
-        ArrayList list = new ArrayList()
-        PlaceDistanceCalculator calculator = new PlaceDistanceCalculator()
-        resultObject.places.each {
-            list.add(calculator.calculateDistance(latitude, longitude, it.latitude, it.longitude))
-        }
-        println list
-        service.filter = new PlaceFilter(resultObject, latitude, longitude, new PlaceDistanceCalculator())
-        def result = service.filter.doFilter()
+        /*Checking places*/
+        CheckingService checkingService = new CheckingService(resultObject, latitude, longitude, placeCount, responseObject.next_page_token?:null)
+        def result = checkingService.check(resultObject)
         resultJson = service.jConverter.toJson(result)
     }
 }

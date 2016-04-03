@@ -8,11 +8,11 @@ import net.bondar.interfaces.JsonConverterInt
 /**
  * Class for converting JSON to Object / Object to JSON
  */
-class JSONConverter implements JsonConverterInt{
+class GroovyJsonConverter implements JsonConverterInt{
     private final JsonBuilder jBuilder
     private final JsonSlurper jSlurper
 
-    JSONConverter(JsonBuilder builder, JsonSlurper slurper){
+    GroovyJsonConverter(JsonBuilder builder, JsonSlurper slurper){
         this.jBuilder = builder
         this.jSlurper = slurper
     }
