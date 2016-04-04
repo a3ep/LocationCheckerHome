@@ -3,24 +3,33 @@ package net.bondar.impl
 import net.bondar.exceptions.LocationCheckerException
 import net.bondar.interfaces.JsonConverterInt
 
+/**
+ * Verifies provided arguments
+ */
 class ParamsChecker {
     private CliBuilder cli
 
     ParamsChecker(){
     }
-
+/**
+ * Method which verifying provided arguments
+ * @param params - user request
+ * @return coordinates and count of places
+ */
     def checkParams(def params){
         def options
-        cli = new CliBuilder(usage: 'Service.groovy -json ', header: 'Options:')
+        cli = new CliBuilder(usage: 'Service.groovy -lat -lng -count', header: 'Options:')
         cli.help('Print this message')
-        cli.params(args: 4, valueSeparator: ',', argsName: 'LATITUDE,LONGITUDE,maxRequestCount,maxResultCount', 'Provide necessary params for searching')
+        cli.lat(args: 1, argName: 'Latitude', 'Input latitude')
+        cli.lng(args:1, argName: 'Longitude', 'Input longitude ')
+        cli.count(args:1, argName: 'Count of places', 'Input count of places')
         options = cli.parse(params)
         if(!options) throw new LocationCheckerException("")
         if(options.help){
             cli.usage()
             throw new LocationCheckerException("")
         }
-        if(!options.params){
+        if(!options.lat && !options.lng && !options.count){
             cli.usage()
             throw new LocationCheckerException("Wrong arguments! ${params}")
         }
@@ -28,7 +37,7 @@ class ParamsChecker {
             if(!(options.params.length()>0)){
                 throw new LocationCheckerException("Wrong params. Please check your input.")
             }
-            return options.params
+            return "${options.lat[0]}"
         }
     }
 }

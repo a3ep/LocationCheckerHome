@@ -12,6 +12,7 @@ class GpaDataChecker implements DataChecker{
  * @return response data
  */
     def getResponseData(def url){
+        if(url.toString().contains("pagetoken")) Thread.sleep(1200)
         def connect = (HttpURLConnection) url.openConnection()
         def responseCode = connect.getResponseCode()
         if(responseCode != 200){

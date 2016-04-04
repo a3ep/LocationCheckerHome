@@ -2,8 +2,18 @@ package net.bondar.impl
 
 import net.bondar.interfaces.DistanceCalculator
 
+/**
+ * Calculates distance between two geographical coordinates
+ */
 class PlaceDistanceCalculator implements DistanceCalculator{
-
+    /**
+     * Method which calculates distance
+     * @param lat1 - first point latitude
+     * @param lng1 - first point longitude
+     * @param lat2 - second point latitude
+     * @param lng2 - second point longitude
+     * @return distance in metres between two points
+     */
     @Override
     double calculateDistance(String lat1, String lng1, String lat2, String lng2) {
         double lat = Double.parseDouble(lat1)

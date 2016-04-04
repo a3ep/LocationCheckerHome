@@ -14,16 +14,16 @@ class GpaDataParser implements DataParser{
     ResultObject parse(def responseObject){
         if(responseObject.status == 'OK' || responseObject.status == 'ZERO_RESULTS'){
             if(responseObject.status == 'ZERO_RESULTS'){
-                return new ResultObject(responseObject.status, "We could not find any place on the specified coordinates")
+                return new ResultObject("OK", "We could not find any place on the specified coordinates. GPA response status --> ${responseObject.status}")
             }
-            ResultObject result = new ResultObject(responseObject.status)
+            ResultObject result = new ResultObject("OK")
             responseObject.results.each{
                 result.places.add(new Place("${it.name.value}", "${it.geometry.location.lat}", "${it.geometry.location.lng}"))
             }
             println("Closest places:\n"+result.places+"\n")
             return result
         }
-        throw new LocationCheckerException("Error while searching places --> ${responseObject.status}");
+        throw new LocationCheckerException("Error while searching places. GPA responce status --> ${responseObject.status}");
 
     }
 }

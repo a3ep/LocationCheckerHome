@@ -5,7 +5,7 @@ import groovy.json.JsonSlurper
 import net.bondar.impl.*
 import net.bondar.interfaces.DataChecker
 import net.bondar.interfaces.DataParser
-import net.bondar.interfaces.Filter
+import net.bondar.interfaces.DistanceSetter
 import net.bondar.interfaces.JsonConverterInt
 import net.bondar.models.Place
 import net.bondar.models.ResultObject
@@ -17,7 +17,7 @@ class CheckingService {
     private def placeCount
     private def count= new Integer(placeCount)
     private def nextPage
-    private Filter filter = new PlaceFilter(result, latitude, longitude, new PlaceDistanceCalculator())
+    private DistanceSetter distanceSetter = new PlaceDistanceSetter(result, latitude, longitude, new PlaceDistanceCalculator())
     private DataChecker dataChecker = new GpaDataChecker()
     private JsonConverterInt jConverter = new GroovyJsonConverter(new JsonBuilder(), new JsonSlurper())
     private DataParser dataParser = new GpaDataParser()
@@ -34,7 +34,7 @@ class CheckingService {
     ResultObject check(ResultObject result){
         if(placeCount>result.places.size()){
             placeCount-=result.places.size()
-            ResultObject checkedObject = filter.doFilter(result.places.size())
+            ResultObject checkedObject = distanceSetter.setDistance(result.places.size())
             resultPlaceList.addAll(checkedObject.places)
             println resultPlaceList.size()
             def newObject = jConverter.toObject(dataChecker.getResponseData(new GpaUrlBuilder(nextPage).build()))
@@ -45,10 +45,10 @@ class CheckingService {
             checkedObject.places.sort {a,b ->
                 a.distance<=>b.distance
             }
-            println checkedObject.places
+//            println checkedObject.places
             return checkedObject
         }
-        return filter.doFilter(placeCount)
+        return distanceSetter.setDistance(placeCount)
     }
 
 }
