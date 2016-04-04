@@ -18,26 +18,24 @@ class ParamsChecker {
  */
     def checkParams(def params){
         def options
-        cli = new CliBuilder(usage: 'Service.groovy -lat -lng -count', header: 'Options:')
+        cli = new CliBuilder(usage: 'Service.groovy -param ', header: 'Options:')
         cli.help('Print this message')
-        cli.lat(args: 1, argName: 'Latitude', 'Input latitude')
-        cli.lng(args:1, argName: 'Longitude', 'Input longitude ')
-        cli.count(args:1, argName: 'Count of places', 'Input count of places')
+        cli.param(args: 3, valueSeparator: ',' as char, argName: 'Latitude, longitude, maxResultCount', 'Provide necessary params for searching')
         options = cli.parse(params)
         if(!options) throw new LocationCheckerException("")
         if(options.help){
             cli.usage()
             throw new LocationCheckerException("")
         }
-        if(!options.lat && !options.lng && !options.count){
+        if(!options.param){
             cli.usage()
             throw new LocationCheckerException("Wrong arguments! ${params}")
         }
-        if(options.params != false){
-            if(!(options.params.length()>0)){
+        if(options.param != false){
+            if(!(options.param.length()>0)){
                 throw new LocationCheckerException("Wrong params. Please check your input.")
             }
-            return "${options.lat[0]}"
+            return ["latitude":"${options.params[0]}", "longitude":"${options.params[1]}", "count":"${options.params[2]}"]
         }
     }
 }

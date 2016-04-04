@@ -23,18 +23,18 @@ class Service {
         this.paramsChecker = new ParamsChecker()
     }
 
-    def search(def lat, def lng, def count){
+    def search(def args){
         def resultJson
-        def latitude = lat
-        def longitude = lng
-        def placeCount = Integer.parseInt(count)
+        def latitude
+        def longitude
+        def placeCount
         /*Checking input params*/
-//        def params = ["-lat", "48"]
-//        ParamsChecker paramsChecker = new ParamsChecker()
-//        def checkedParams = paramsChecker.checkParams(params.size()>0?params:["-help"])
-//        latitude = checkedParams[0]
-//        longitude = checkedParams[1]
-//        placeCount = checkedParams[2]
+//        def args = ["-param", "${lat},${lng},${count}"]
+        ParamsChecker paramsChecker = new ParamsChecker()
+        def checkedParams = paramsChecker.checkParams(args.size()>0?args:["-help"])
+        latitude = checkedParams.latitude
+        longitude = checkedParams.longitude
+        placeCount = Integer.parseInt(checkedParams.count)
 
         Service service = new Service()
         /* Builds GPA url*/

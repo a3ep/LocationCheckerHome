@@ -1,13 +1,13 @@
 package net.bondar
 
 /**
- * Script for getting information about closest places on the specified geographical coordinates
+ * Script for getting information about closest places on the basic of specified geographical coordinates
  */
-args = ["48.4644455", "35.0475775", "2"]
+args = ["-param","48.4644455,35.0475775,2"]
 
 try{
     def service = new Service()
-    def result = service.search(args[0], args[1], args[2])
+    def result = service.search(args)
     println("\nOperation Completed")
 
 }
