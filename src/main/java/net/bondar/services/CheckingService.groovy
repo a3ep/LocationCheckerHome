@@ -1,4 +1,4 @@
-package net.bondar
+package net.bondar.services
 
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
@@ -17,7 +17,7 @@ class CheckingService {
     private def placeCount
     private def count= new Integer(placeCount)
     private def nextPage
-    private DistanceSetter distanceSetter = new PlaceDistanceSetter(result, latitude, longitude, new PlaceDistanceCalculator())
+    private DistanceSetter distanceSetter = new PlaceDistanceSetter(result, latitude, longitude, new GpsDistanceCalculator())
     private DataChecker dataChecker = new GpaDataChecker()
     private JsonConverterInt jConverter = new GroovyJsonConverter(new JsonBuilder(), new JsonSlurper())
     private DataParser dataParser = new GpaDataParser()
@@ -36,14 +36,20 @@ class CheckingService {
             placeCount-=result.places.size()
             ResultObject checkedObject = distanceSetter.setDistance(result.places.size())
             resultPlaceList.addAll(checkedObject.places)
-            println resultPlaceList.size()
+//            println resultPlaceList.size()
             def newObject = jConverter.toObject(dataChecker.getResponseData(new GpaUrlBuilder(nextPage).build()))
-            if(newObject.next_page_token) nextPage = newObject.next_page_token
+            if(newObject.next_page_token) {
+                nextPage = newObject.next_page_token
+            }
             checkedObject = check((ResultObject)dataParser.parse(newObject))
-            if(resultPlaceList.size()!=count) resultPlaceList.addAll(checkedObject.places)
-            if(checkedObject.places.size()!=resultPlaceList.size())checkedObject.places = resultPlaceList
+            if(resultPlaceList.size()!=count) {
+                resultPlaceList.addAll(checkedObject.places)
+            }
+            if(checkedObject.places.size()!=resultPlaceList.size()){
+                checkedObject.places = resultPlaceList
+            }
             checkedObject.places.sort {a,b ->
-                a.distance<=>b.distance
+                a.distance <=> b.distance
             }
 //            println checkedObject.places
             return checkedObject

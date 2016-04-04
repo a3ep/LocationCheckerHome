@@ -1,10 +1,11 @@
 package net.bondar.impl
 
+import groovy.util.logging.Log
 import net.bondar.exceptions.LocationCheckerException
 import net.bondar.interfaces.DataParser
 import net.bondar.models.Place
 import net.bondar.models.ResultObject
-
+@Log
 class GpaDataParser implements DataParser{
     /**
      * Receiving list of places from response object
@@ -23,7 +24,8 @@ class GpaDataParser implements DataParser{
             println("Closest places:\n"+result.places+"\n")
             return result
         }
-        throw new LocationCheckerException("Error while searching places. GPA responce status --> ${responseObject.status}");
+        log.info("Error while checking GPA response status.")
+        throw new LocationCheckerException("Error while checking GPA response status.\nResponce status --> ${responseObject.status}");
 
     }
 }

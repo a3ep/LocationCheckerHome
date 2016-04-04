@@ -1,22 +1,27 @@
-package net.bondar
+package net.bondar.services
 
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import groovy.util.logging.Log
 import net.bondar.impl.*
-import net.bondar.interfaces.*
+import net.bondar.interfaces.DataChecker
+import net.bondar.interfaces.DataParser
+import net.bondar.interfaces.JsonConverterInt
+import net.bondar.interfaces.UrlBuilder
 import net.bondar.models.ResultObject
 
 /**
  * Main service which work with user requests and passing tasks to another classes
  */
-class Service {
+@Log
+class MainService {
     private UrlBuilder urlBuilder
     private DataChecker dataChecker
     private DataParser dataParser
     private JsonConverterInt jConverter
     private ParamsChecker paramsChecker
 
-    Service(){
+    MainService(){
         this.dataChecker = new GpaDataChecker()
         this.dataParser = new GpaDataParser()
         this.jConverter = new GroovyJsonConverter(new JsonBuilder(), new JsonSlurper())
@@ -27,39 +32,47 @@ class Service {
      * @param args - user's request
      * @return result object with places or with error message
      */
+
     def search(def args){
         def resultJson
         /*Checking input params*/
+        log.info("Checking input params\n")
         ParamsChecker paramsChecker = new ParamsChecker()
         def checkedParams = paramsChecker.checkParams(args.size()>0?args:["-h"])
         def latitude = checkedParams.latitude
         def longitude = checkedParams.longitude
         def placeCount = Integer.parseInt(checkedParams.count)
-
-        Service service = new Service()
         try{
             /* Builds GPA url*/
-            service.urlBuilder = new GpaUrlBuilder(latitude, longitude)
-            URL completeGpaUrl = service.urlBuilder.build()
+            log.info("Building GPA url")
+            urlBuilder = new GpaUrlBuilder(latitude, longitude)
+            URL completeGpaUrl = urlBuilder.build()
             /*Receiving response object from GPA*/
+            log.info("Receiving response object from GPA")
             def responseObject
-            responseObject = service.jConverter.toObject(service.dataChecker.getResponseData(completeGpaUrl))
+            responseObject = jConverter.toObject(dataChecker.getResponseData(completeGpaUrl))
             try{
                 Thread.sleep(3000)
-                responseObject=service.jConverter.toObject(service.dataChecker.getResponseData(completeGpaUrl))
+                responseObject=jConverter.toObject(dataChecker.getResponseData(completeGpaUrl))
             }
             catch (Exception ex){
-                return new ResultObject("ERROR", ex.getMessage())
+                log.info("Error wile receiving response object from GPA")
+                return new ResultObject("ERROR", "Error wile receiving response object from GPA:\n ${ex.getMessage()}")
             }
-            /*Getting the list of places from GPA response object*/
-            ResultObject resultObject = service.dataParser.parse(responseObject)
+            /*Getting the result object from GPA response object*/
+            log.info("Getting the object from GPA response object")
+            ResultObject resultObject = dataParser.parse(responseObject)
             /*Checking places*/
+            log.info("Checking places")
             CheckingService checkingService = new CheckingService(resultObject, latitude, longitude, placeCount, responseObject.next_page_token?:null)
             def result = checkingService.check(resultObject)
-            resultJson = service.jConverter.toJson(result)
+            log.info("Converting result object to JSON")
+            resultJson = jConverter.toJson(result)
+            return resultJson
         }
         catch (Exception e){
-            return new ResultObject("ERROR", e.getMessage())
+            log.info("Error while searching places")
+            return new ResultObject("ERROR", "Error while searching places:\n ${e.getMessage()}")
         }
     }
 }

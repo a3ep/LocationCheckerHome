@@ -1,5 +1,8 @@
 package net.bondar
 
+import net.bondar.models.ResultObject
+import net.bondar.services.MainService
+
 /**
  * Script for getting information about closest places on the basic of specified geographical coordinates
  */
@@ -7,17 +10,21 @@ package net.bondar
 //args = ["-h"] --> help message
 
 try{
-    def service = new Service()
+    def service = new MainService()
     def result = service.search(args)
+    println result
     println("\nOperation Completed")
+    return result
+
 
 }
 catch (Exception e){
     println(e.message)
     println("Operation failed")
-    return
+    return new ResultObject("ERROR", "${e.getMessage()}")
 }
 catch (Throwable t){
-    t.printStackTrace();
-    println("Unexpected error: ${t.getMessage()}");
+    t.printStackTrace()
+    println("Unexpected error: ${t.getMessage()}")
+    return new ResultObject("ERROR", "${t.getMessage()}")
 }

@@ -27,12 +27,13 @@ class ResultObject {
         return ERROR_MESSAGE
     }
 
+
     @Override
     public String toString() {
         return "ResultObject{" +
                 "STATUS=" + STATUS +
                 ", places=" + places +
-                ", ERROR_MAEESGE='" + ERROR_MESSAGE + '\'' +
+                ", ERROR_MESSAGE='" + ERROR_MESSAGE + '\'' +
                 '}';
     }
 }
