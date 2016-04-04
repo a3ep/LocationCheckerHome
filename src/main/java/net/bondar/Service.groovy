@@ -22,23 +22,23 @@ class Service {
         this.jConverter = new GroovyJsonConverter(new JsonBuilder(), new JsonSlurper())
         this.paramsChecker = new ParamsChecker()
     }
-
+    /**
+     * Method work with user requests
+     * @param args - user's request
+     * @return result object with places or with error message
+     */
     def search(def args){
         def resultJson
-        def latitude
-        def longitude
-        def placeCount
         /*Checking input params*/
-//        def args = ["-param", "${lat},${lng},${count}"]
         ParamsChecker paramsChecker = new ParamsChecker()
-        def checkedParams = paramsChecker.checkParams(args.size()>0?args:["-help"])
-        latitude = checkedParams.latitude
-        longitude = checkedParams.longitude
-        placeCount = Integer.parseInt(checkedParams.count)
+        def checkedParams = paramsChecker.checkParams(args.size()>0?args:["-h"])
+        def latitude = checkedParams.latitude
+        def longitude = checkedParams.longitude
+        def placeCount = Integer.parseInt(checkedParams.count)
 
         Service service = new Service()
-        /* Builds GPA url*/
         try{
+            /* Builds GPA url*/
             service.urlBuilder = new GpaUrlBuilder(latitude, longitude)
             URL completeGpaUrl = service.urlBuilder.build()
             /*Receiving response object from GPA*/
