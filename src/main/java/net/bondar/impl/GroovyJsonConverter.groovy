@@ -36,8 +36,7 @@ class GroovyJsonConverter implements JsonConverterInt{
     */
     def toJson(def object){
        try{
-           def json = jBuilder.call(object)
-           return json
+           jBuilder.call(object)
        }
        catch (Exception e){
            throw new LocationCheckerException("Error while building JSON: \n${e.getMessage()}")

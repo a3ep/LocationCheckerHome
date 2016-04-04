@@ -1,39 +1,41 @@
 package net.bondar.models
 
 class ResultObject {
-    private final def STATUS
-    private List<Place> places
-    private final String ERROR_MESSAGE = ""
 
-    ResultObject(def status){
-        this.STATUS = status
-        this.places = new ArrayList<>()
+    /**
+     *
+     */
+    final String status
+
+    /**
+     *
+     */
+    final String errorMessage
+
+    /**
+     *
+     */
+    final List<Place> places = new ArrayList<>()
+
+    ResultObject(String status) {
+        //this.status = status
     }
 
-    ResultObject(def status, String errorMessage){
-        this.STATUS = status
-        this.ERROR_MESSAGE = errorMessage
+    ResultObject(String status, String errorMessage) {
+        this.status = status
+        this.errorMessage = errorMessage
     }
 
     List<Place> getPlaces() {
-        return places
+        places.clone()
     }
-
-    def getSTATUS() {
-        return STATUS
-    }
-
-    String getERROR_MESSAGE() {
-        return ERROR_MESSAGE
-    }
-
 
     @Override
     public String toString() {
-        return "ResultObject{" +
-                "STATUS=" + STATUS +
+        "ResultObject{" +
+                "status=" + status +
                 ", places=" + places +
-                ", ERROR_MESSAGE='" + ERROR_MESSAGE + '\'' +
-                '}';
+                ", errorMessage='" + errorMessage + '\'' +
+                '}'
     }
 }
