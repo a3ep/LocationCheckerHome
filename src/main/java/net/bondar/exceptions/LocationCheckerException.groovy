@@ -1,12 +1,9 @@
 package net.bondar.exceptions
-
-class LocationCheckerException extends RuntimeException{
-
-    LocationCheckerException() {
-
-    }
-
-    LocationCheckerException(String message){
+/**
+ *
+ */
+class LocationCheckerException extends RuntimeException {
+    LocationCheckerException(String message = "") {
         super(message)
     }
 }

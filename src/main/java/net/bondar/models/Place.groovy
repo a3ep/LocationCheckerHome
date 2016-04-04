@@ -1,27 +1,27 @@
 package net.bondar.models
 
 class Place {
-    private final def TITLE
-    private final def LATITUDE
-    private final def LONGITUDE
+    private final def title
+    private final def latitude
+    private final def longitude
     private def distance
 
-    Place(def title, def latitude, def longitude){
-        this.TITLE=title
-        this.LATITUDE = latitude
-        this.LONGITUDE = longitude
+    Place(def title, def latitude, def longitude) {
+        this.title = title
+        this.latitude = latitude
+        this.longitude = longitude
     }
 
     GString getTitle() {
-        return TITLE
+        return title
     }
 
     GString getLatitude() {
-        return LATITUDE
+        return latitude
     }
 
     GString getLongitude() {
-        return LONGITUDE
+        return longitude
     }
 
     void setDistance(distance) {
@@ -32,9 +32,9 @@ class Place {
     @Override
     public String toString() {
         return "Place{" +
-                "TITLE=" + TITLE +
-                ", LATITUDE=" + LATITUDE +
-                ", LONGITUDE=" + LONGITUDE +
+                "title=" + title +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 ", distance=" + distance +
                 '}';
     }

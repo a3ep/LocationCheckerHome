@@ -1,5 +1,12 @@
 package net.bondar
 
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+import net.bondar.impl.*
+import net.bondar.interfaces.APIConnection
+import net.bondar.interfaces.AbstractUrlBuilderFactory
+import net.bondar.interfaces.JSONConverter
+import net.bondar.interfaces.ObjectConverter
 import net.bondar.services.APIService
 
 /**
@@ -9,11 +16,14 @@ import net.bondar.services.APIService
 //args = ["-h"] --> help
 
 try {
-    //
-    //
-    //
-    def service = new APIService(/*..., ..., ...*/)
-    service.search(args)
+    AbstractUrlBuilderFactory urlBuilderFactory = new GPAUrlBuilderFactory()
+    APIConnection apiConnection = new GooglePlacesAPI()
+    ObjectConverter objectConverter = new GPAObjectConverter()
+    JSONConverter jsonConverter = new GroovyJSONConverter(new JsonBuilder(), new JsonSlurper())
+    ParameterChecker parameterChecker = new ParameterChecker()
+
+    def service = new APIService(urlBuilderFactory, apiConnection, objectConverter, jsonConverter, parameterChecker)
+    println(service.search(parameterChecker.checkParams(args.size() > 0 ? args : ["-h"])))
 } catch (Throwable t) {
     t.printStackTrace()
 }

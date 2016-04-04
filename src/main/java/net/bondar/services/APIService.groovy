@@ -1,32 +1,32 @@
 package net.bondar.services
 
-import groovy.json.JsonBuilder
-import groovy.json.JsonSlurper
 import groovy.util.logging.Log
-import net.bondar.impl.*
-import net.bondar.interfaces.DataChecker
-import net.bondar.interfaces.DataParser
-import net.bondar.interfaces.JsonConverterInt
-import net.bondar.interfaces.UrlBuilder
+import net.bondar.exceptions.LocationCheckerException
+import net.bondar.impl.ParameterChecker
+import net.bondar.interfaces.APIConnection
+import net.bondar.interfaces.AbstractUrlBuilderFactory
+import net.bondar.interfaces.JSONConverter
+import net.bondar.interfaces.ObjectConverter
 import net.bondar.models.ResultObject
 
 /**
- * Main service which work with user requests and passing tasks to another classes
+ * Processes the user search requests to obtain result object.
  */
 @Log
 class APIService {
 
-    private UrlBuilder urlBuilder
-    private DataChecker dataChecker
-    private DataParser dataParser
-    private JsonConverterInt jConverter
-    private ParamsChecker paramsChecker
+    private AbstractUrlBuilderFactory urlBuilderFactory
+    private APIConnection apiConnection
+    private ObjectConverter objectConverter
+    private JSONConverter jConverter
+    private ParameterChecker paramsChecker
 
-    APIService() {
-        this.dataChecker = new GpaDataChecker()
-        this.dataParser = new GpaDataParser()
-        this.jConverter = new GroovyJsonConverter(new JsonBuilder(), new JsonSlurper())
-        this.paramsChecker = new ParamsChecker()
+    APIService(AbstractUrlBuilderFactory urlBuilderFactory, APIConnection apiConnection, ObjectConverter objectConverter, JSONConverter jsonConverter, ParameterChecker parameterChecker) {
+        this.urlBuilderFactory = urlBuilderFactory
+        this.apiConnection = apiConnection
+        this.objectConverter = objectConverter
+        this.jConverter = jsonConverter
+        this.paramsChecker = parameterChecker
     }
 
     /**
@@ -35,46 +35,50 @@ class APIService {
      * @param request the request is represented by a JSON object, which should have the following format: ..,
      * @return result object with places or with an error message
      */
-    def search(def request) {
-        // checks input params
-        log.info("Checking input params")
-        ParamsChecker paramsChecker = new ParamsChecker()
-        def checkedParams = paramsChecker.checkParams(request.size() > 0 ? request : ["-h"])
-        def latitude = checkedParams.latitude
-        def longitude = checkedParams.longitude
-        def placeCount = Integer.parseInt(checkedParams.count)
+    Object search(def request) {
+        String latitude = request.latitude
+        String longitude = request.longitude
+        def placeCount = Integer.parseInt(request.count)
         log.info("Input parameters -->\nlatitude=${latitude}\nlongitude=${longitude}\nplaceCount=${placeCount}")
 
         try {
             // builds GPA url
-            log.info("Building GPA url")
-            urlBuilder = new GpaUrlBuilder(latitude, longitude)
-            URL completeGpaUrl = urlBuilder.build()
-
+//            log.info("Builds GPA url")
+//            URL url = urlBuilderFactory.createUrlBuilder(latitude, longitude, null).build()
             // receives response object from GPA
-            log.info("Receiving response object from GPA")
-            def responseObject = jConverter.toObject(dataChecker.getResponseData(completeGpaUrl))
-            try {
-                Thread.sleep(3000)
-                responseObject = jConverter.toObject(dataChecker.getResponseData(completeGpaUrl))
-            } catch (Exception ex) {
-                log.info("Error wile receiving response object from GPA")
-                return new ResultObject("ERROR", "Error wile receiving response object from GPA:\n ${ex.getMessage()}")
-            }
-
-            // gets the result object from GPA response object
-            log.info("Getting the object from GPA response object")
-            ResultObject resultObject = dataParser.parse(responseObject)
-
+            log.info("Receives response object from GPA")
+//            Object responseObject = convertToObject(apiConnection.getInputStream(url))
             // checks places
-            log.info("Checking places")
-            CheckingService checkingService = new CheckingService(resultObject, latitude, longitude, placeCount, responseObject.next_page_token ?: null)
-            def result = checkingService.check(resultObject)
+            log.info("Processes places")
+            ProcessingService checkingService = new ProcessingService(latitude, longitude, placeCount)
+            def tmpObject = checkingService.process()
             log.info("Converting result object to JSON")
-            return jConverter.toJson(result)
-        } catch (Exception e) {
+            ResultObject result = new ResultObject(tmpObject.status)
+            result.addPlaces(tmpObject.places)
+            convertToJSON(result)
+        } catch (LocationCheckerException e) {
             log.info("Error while searching places")
             return new ResultObject("ERROR", "Error while searching places:\n ${e.getMessage()}")
         }
+    }
+
+    /**
+     * Converts Objects to JSON.
+     *
+     * @param object object that needs to convert
+     * @return converted JSON
+     */
+    Object convertToJSON(Object object) {
+        jConverter.toJson(object)
+    }
+
+    /**
+     * Converts JSON to Object.
+     *
+     * @param json json string that needs to convert
+     * @return converted object
+     */
+    Object convertToObject(InputStreamReader json) {
+        jConverter.toObject(json)
     }
 }

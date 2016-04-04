@@ -10,6 +10,11 @@ class ResultObject {
     /**
      *
      */
+    final String comment=""
+
+    /**
+     *
+     */
     final String errorMessage
 
     /**
@@ -18,7 +23,7 @@ class ResultObject {
     final List<Place> places = new ArrayList<>()
 
     ResultObject(String status) {
-        //this.status = status
+        this(status, "")
     }
 
     ResultObject(String status, String errorMessage) {
@@ -26,16 +31,27 @@ class ResultObject {
         this.errorMessage = errorMessage
     }
 
+    ResultObject(String status, String comment, String errorMessage) {
+        this.status = status
+        this.comment = comment
+        this.errorMessage = errorMessage
+    }
+
     List<Place> getPlaces() {
         places.clone()
     }
 
+    void addPlaces(List<Place> places) {
+        this.places.addAll(places)
+    }
+
     @Override
     public String toString() {
-        "ResultObject{" +
-                "status=" + status +
-                ", places=" + places +
+        return "ResultObject{" +
+                "status='" + status + '\'' +
+                ", comment='" + comment + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +
-                '}'
+                ", places=" + places +
+                '}';
     }
 }

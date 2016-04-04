@@ -5,7 +5,7 @@ import net.bondar.interfaces.DistanceCalculator
 /**
  * Calculates distance between two geographical coordinates
  */
-class PlaceDistanceCalculator implements DistanceCalculator{
+class PlaceDistanceCalculator implements DistanceCalculator {
     /**
      * Method which calculates distance
      * @param lat1 - first point latitude
@@ -21,12 +21,12 @@ class PlaceDistanceCalculator implements DistanceCalculator{
         double tLat = Double.parseDouble(lat2)
         double tLng = Double.parseDouble(lng2)
         double earthRadius = 6371000
-        double dLat = Math.toRadians(tLat-lat)
-        double dLng = Math.toRadians(tLng-lng)
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                    Math.cos(Math.toRadians(lat)) * Math.cos(Math.toRadians(tLat)) *
-                    Math.sin(dLng/2) * Math.sin(dLng/2)
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+        double dLat = Math.toRadians(tLat - lat)
+        double dLng = Math.toRadians(tLng - lng)
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat)) * Math.cos(Math.toRadians(tLat)) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2)
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
         def dist = earthRadius * c
         return dist
     }

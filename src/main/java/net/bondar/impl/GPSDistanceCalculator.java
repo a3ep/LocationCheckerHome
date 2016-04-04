@@ -2,9 +2,8 @@ package net.bondar.impl;
 
 import net.bondar.interfaces.DistanceCalculator;
 
-public final class GpsDistanceCalculator implements DistanceCalculator{
-    public double calculateDistance(String latF, String lonF, String latS, String lonS)
-    {
+public final class GPSDistanceCalculator implements DistanceCalculator {
+    public double calculateDistance(String latF, String lonF, String latS, String lonS) {
         double lat1 = Double.parseDouble(latF);
         double lon1 = Double.parseDouble(lonF);
         double lat2 = Double.parseDouble(latS);
@@ -22,16 +21,14 @@ public final class GpsDistanceCalculator implements DistanceCalculator{
         double sigma;
 
         double lambda = L, lambdaP, iterLimit = 100;
-        do
-        {
+        do {
             double sinLambda = Math.sin(lambda), cosLambda = Math.cos(lambda);
-            sinSigma = Math.sqrt(	(cosU2 * sinLambda)
+            sinSigma = Math.sqrt((cosU2 * sinLambda)
                     * (cosU2 * sinLambda)
                     + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda)
                     * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda)
             );
-            if (sinSigma == 0)
-            {
+            if (sinSigma == 0) {
                 return 0;
             }
 
@@ -43,17 +40,16 @@ public final class GpsDistanceCalculator implements DistanceCalculator{
 
             double C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));
             lambdaP = lambda;
-            lambda = 	L + (1 - C) * f * sinAlpha
-                    * 	(sigma + C * sinSigma
-                    * 	(cos2SigmaM + C * cosSigma
-                    * 	(-1 + 2 * cos2SigmaM * cos2SigmaM)
+            lambda = L + (1 - C) * f * sinAlpha
+                    * (sigma + C * sinSigma
+                    * (cos2SigmaM + C * cosSigma
+                    * (-1 + 2 * cos2SigmaM * cos2SigmaM)
             )
             );
 
         } while (Math.abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
 
-        if (iterLimit == 0)
-        {
+        if (iterLimit == 0) {
             return 0;
         }
 
@@ -69,8 +65,6 @@ public final class GpsDistanceCalculator implements DistanceCalculator{
                         * (-3 + 4 * sinSigma * sinSigma)
                         * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
 
-        double s = b * A * (sigma - deltaSigma);
-
-        return s;
+        return b * A * (sigma - deltaSigma);
     }
 }
