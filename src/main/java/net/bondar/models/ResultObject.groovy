@@ -1,24 +1,26 @@
 package net.bondar.models
-
+/**
+ * Contains the final result of the user request.
+ */
 class ResultObject {
 
     /**
-     *
+     * Status of script response, should have the following format: "OK" or "ERROR".
      */
     final String status
 
     /**
-     *
+     * Used when Google Places API return response without places.
      */
-    final String comment=""
+    final def comment
 
     /**
-     *
+     * Used when errors occurred during the script.
      */
     final String errorMessage
 
     /**
-     *
+     * List of places.
      */
     final List<Place> places = new ArrayList<>()
 
@@ -26,7 +28,7 @@ class ResultObject {
         this(status, "")
     }
 
-    ResultObject(String status, String errorMessage) {
+    ResultObject(String status, def comment = "", String errorMessage) {
         this.status = status
         this.errorMessage = errorMessage
     }

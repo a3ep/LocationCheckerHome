@@ -1,23 +1,25 @@
 package net.bondar.models
-
+/**
+ * Accumulates information in the processing of the request and passes it an ResultObject.
+ */
 class TempResultObject {
     /**
-     *
+     * Status of script response, should have the following format: "OK" or "ERROR".
      */
     private String status
 
     /**
-     *
+     * Used when Google Places API return response without places.
      */
     private String comment
 
     /**
-     *
+     * Used when errors occurred during the script.
      */
     private String errorMessage
 
     /**
-     *
+     * List of places.
      */
     private List<Place> places = new ArrayList<>()
 

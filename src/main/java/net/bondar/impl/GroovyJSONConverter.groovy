@@ -16,6 +16,7 @@ class GroovyJSONConverter implements JSONConverter {
         this.jBuilder = builder
         this.jSlurper = slurper
     }
+
     /**
      * Converts JSON to Object.
      *
@@ -30,6 +31,7 @@ class GroovyJSONConverter implements JSONConverter {
             throw new ApplicationException("Error while reading data from Google Places API response: \n${e.getMessage()}")
         }
     }
+
     /**
      * Converts Object to JSON.
      *

@@ -1,12 +1,14 @@
 package net.bondar.interfaces
 /**
- * Interface for opening http-connection and receiving response data
+ * Connects and receives response data.
  */
 interface APIConnection {
+
     /**
+     * Connects to API, checks response code and gives back InputStreamReader.
      *
-     * @param url
-     * @return
+     * @param url query to PI
+     * @return API response in format InputStreamReader
      */
     InputStreamReader getInputStream(URL url)
 }

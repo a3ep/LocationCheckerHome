@@ -2,7 +2,18 @@ package net.bondar.impl;
 
 import net.bondar.interfaces.DistanceCalculator;
 
+/**
+ * Calculates distance between two geographical coordinates
+ */
 public final class GPSDistanceCalculator implements DistanceCalculator {
+
+    /**
+     * @param latF first point latitude
+     * @param lonF first point longitude
+     * @param latS second point latitude
+     * @param lonS second point longitude
+     * @return distance in metres between two points
+     */
     public double calculateDistance(String latF, String lonF, String latS, String lonS) {
         double lat1 = Double.parseDouble(latF);
         double lon1 = Double.parseDouble(lonF);

@@ -1,7 +1,13 @@
 package net.bondar.interfaces
 /**
- * Interface for building URLs
+ * Builds URL.
  */
 interface UrlBuilder {
+
+    /**
+     * Builds concrete URL.
+     *
+     * @return URL
+     */
     URL build()
 }

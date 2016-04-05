@@ -1,9 +1,27 @@
 package net.bondar.models
-
+/**
+ * Place entity.
+ */
 class Place {
+
+    /**
+     * Place title.
+     */
     private final def title
+
+    /**
+     * Place latitude.
+     */
     private final def latitude
+
+    /**
+     * Place longitude.
+     */
     private final def longitude
+
+    /**
+     * Distance between place coordinates and the specified coordinates.
+     */
     private def distance
 
     Place(def title, def latitude, def longitude) {
