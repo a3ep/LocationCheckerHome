@@ -1,10 +1,12 @@
 package net.bondar.impl
 
+import groovy.util.logging.Log
 import net.bondar.exceptions.ApplicationException
 
 /**
  * Verifies provided arguments.
  */
+@Log
 class ParameterChecker {
 
     /**
@@ -14,6 +16,7 @@ class ParameterChecker {
      * @return true if coordinates right ( -90<Latitude<90, -180<Longitude<180 )
      */
     boolean check(def coordinates) {
+        log.info("Checks input parameters\n")
         try {
             if (coordinates.latitude == null || coordinates.longitude == null) throw new ApplicationException()
             def latitude = coordinates.latitude.trim().split('\\.')

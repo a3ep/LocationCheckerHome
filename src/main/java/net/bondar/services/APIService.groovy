@@ -67,7 +67,7 @@ class APIService {
         String latitude = request.latitude.replace("--", "-")
         String longitude = request.longitude.replace("--", "-")
         def placeCount = Integer.parseInt(request.count)
-        log.info("Input parameters -->\nlatitude=${latitude}\nlongitude=${longitude}\nplaceCount=${placeCount}")
+        log.info("Input parameters -->\nlatitude=${latitude}\nlongitude=${longitude}\nplaceCount=${placeCount}\n")
 
         convertToJSON(buildResultObject(processorFactory.createProcessor(latitude, longitude, placeCount, apiConnection, objectChecker, jConverter).process()))
     }
@@ -79,7 +79,7 @@ class APIService {
      * @return complete result object
      */
     ResultObject buildResultObject(TempResultObject tempResultObject) {
-        log.info("Builds result object")
+        log.info("Builds result object\n")
         if (tempResultObject.status == 'OK') {
             if (tempResultObject.comment != "") {
                 new ResultObject(tempResultObject.status, tempResultObject.comment, "")
@@ -99,7 +99,7 @@ class APIService {
      * @return converted JSON
      */
     Object convertToJSON(Object object) {
-        log.info("Converting result object to JSON")
+        log.info("Converting result object to JSON\n")
         jConverter.toJson(object)
     }
 }

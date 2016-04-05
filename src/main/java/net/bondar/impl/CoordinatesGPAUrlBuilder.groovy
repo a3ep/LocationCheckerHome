@@ -22,7 +22,7 @@ class CoordinatesGPAUrlBuilder extends AbstractGPAUrlBuilder {
      */
     @Override
     URL build() {
-        log.info("Builds Google Places URL on the basis of geographical coordinates")
+        log.info("Builds Google Places URL on the basis of geographical coordinates\n")
         StringBuilder urlBuilder = new StringBuilder(super.mainUrlPart).append("location=${latitude},${longitude}").append("&rankby=distance").append("&types=${super.placeTypes}").append("&key=${super.gpaKey}")
         new URL(urlBuilder.toString())
     }

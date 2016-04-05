@@ -20,7 +20,7 @@ class PageTokenGPAUrlBuilder extends AbstractGPAUrlBuilder {
      */
     @Override
     URL build() {
-        log.info("Builds Google Places URL on the basis of page token")
+        log.info("Builds Google Places URL on the basis of page token\n")
         StringBuilder urlBuilder = new StringBuilder(super.mainUrlPart).append("pagetoken=${pageToken}").append("&key=${super.gpaKey}")
         new URL(urlBuilder.toString())
     }

@@ -17,7 +17,7 @@ class GooglePlacesAPI implements APIConnection {
      * @return Google Places API response in format InputStreamReader
      */
     InputStreamReader getInputStream(URL url) {
-        log.info("Receives response object from Google Places API")
+        log.info("Receives response object from Google Places API\n")
         if (url.toString().contains("pagetoken")) {
             Thread.sleep(2000)
         }
