@@ -1,6 +1,7 @@
 package net.bondar.services
 
 import groovy.util.logging.Log
+import net.bondar.exceptions.ApplicationException
 import net.bondar.impl.GPAObjectChecker
 import net.bondar.impl.ParameterChecker
 import net.bondar.interfaces.APIConnection
@@ -10,15 +11,10 @@ import net.bondar.interfaces.JSONConverter
 import net.bondar.models.ResultObject
 import net.bondar.models.TempResultObject
 
-import java.util.logging.Level
-
-@Grapes(
-        @Grab(group='org.apache.logging.log4j', module='log4j-to-slf4j', version='2.5')
-)
 /**
  * Processes the user search requests to obtain result object.
  */
-@Log()
+@Log
 class APIService {
 
     private AbstractUrlBuilderFactory urlBuilderFactory
@@ -49,10 +45,14 @@ class APIService {
         cli.h(longOpt: "help", 'Print this message')
         cli.p(longOpt: "param", args: 3, valueSeparator: ';', argName: 'latitude, longitude, maxResultCount', 'Searching location with given coordinates. Negative numbers looks like --34.586')
         options = cli.parse(params)
-        if (options.h || !options || !options.p) {
+        if (!options) throw new ApplicationException("Error empty arguments. Please check your input.")
+        if (options.h) {
             cli.usage()
             System.exit(0)
-        } else if (paramsChecker.check(["latitude": "${options.ps[0]}", "longitude": "${options.ps[1]}"])) {
+        } else if (!options.p) {
+            cli.usage()
+            throw new ApplicationException("Wrong parameters or options. Please check your input.")
+        } else if (paramsChecker.check(options.ps)) {
             ["latitude": "${options.ps[0].trim()}", "longitude": "${options.ps[1].trim()}", "count": "${options.ps[2]}"]
         }
     }
@@ -82,7 +82,7 @@ class APIService {
         log.info("Builds result object\n")
         if (tempResultObject.status == 'OK') {
             if (tempResultObject.comment != "") {
-                new ResultObject(tempResultObject.status, tempResultObject.comment, "")
+                return new ResultObject(tempResultObject.status, tempResultObject.comment, "")
             }
             ResultObject resultObject = new ResultObject("OK")
             resultObject.addPlaces(tempResultObject.places)
