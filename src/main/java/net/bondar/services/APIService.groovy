@@ -10,10 +10,15 @@ import net.bondar.interfaces.JSONConverter
 import net.bondar.models.ResultObject
 import net.bondar.models.TempResultObject
 
+import java.util.logging.Level
+
+@Grapes(
+        @Grab(group='org.apache.logging.log4j', module='log4j-to-slf4j', version='2.5')
+)
 /**
  * Processes the user search requests to obtain result object.
  */
-@Log
+@Log()
 class APIService {
 
     private AbstractUrlBuilderFactory urlBuilderFactory

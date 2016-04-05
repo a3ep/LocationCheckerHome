@@ -3,19 +3,14 @@ package net.bondar
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import net.bondar.impl.*
-import net.bondar.interfaces.APIConnection
-import net.bondar.interfaces.AbstractProcessorFactory
-import net.bondar.interfaces.AbstractUrlBuilderFactory
-import net.bondar.interfaces.JSONConverter
-import net.bondar.interfaces.ObjectChecker
+import net.bondar.interfaces.*
 import net.bondar.services.APIService
 
 /**
- * Script for getting information about closest places on the basic of specified geographical coordinates
+ * Script for returns information about closest places on the basic of specified geographical coordinates.
  */
 //args = ["-p","48.4644455,35.0475775,2"] /*--> OK*/
 //args = ["-h"] /*--> help*/
-
 try {
     AbstractUrlBuilderFactory urlBuilderFactory = new GPAUrlBuilderFactory()
     AbstractProcessorFactory processorFactory = new APIProcessorFactory()

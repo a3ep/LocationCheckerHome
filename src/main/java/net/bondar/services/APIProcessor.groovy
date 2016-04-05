@@ -41,7 +41,7 @@ class APIProcessor implements Processor {
         log.info("Processes places")
         try {
             while (iterator.hasNext()) {
-                object.places.addAll(iterator.updateKeeper().places)
+                object.places.addAll(iterator.next())
                 if (object.places.size() == 0) {
                     new TempResultObject("OK", "We could not find any place on the specified coordinates. GPA response status --> ${responseObject.status}", "")
                 }
@@ -61,7 +61,7 @@ class APIProcessor implements Processor {
      */
     TempResultObject setDistanceToPlaces(TempResultObject object) {
         object.places.each {
-            it.distance = distanceCalculator.calculateDistance(latitude, longitude, it.latitude, it.longitude)
+            it.setDistance(String.format("%.1f", distanceCalculator.calculateDistance(latitude, longitude, it.latitude, it.longitude))+"м")
         }
         return object
     }

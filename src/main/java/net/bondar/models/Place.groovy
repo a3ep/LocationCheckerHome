@@ -22,7 +22,7 @@ class Place {
     /**
      * Distance between place coordinates and the specified coordinates.
      */
-    private def distance
+    private String distance
 
     Place(def title, def latitude, def longitude) {
         this.title = title
@@ -42,7 +42,7 @@ class Place {
         return longitude
     }
 
-    void setDistance(distance) {
+    void setDistance(String distance) {
         this.distance = distance
     }
 

@@ -6,20 +6,20 @@ import net.bondar.interfaces.APIConnection
 import net.bondar.interfaces.JSONConverter
 import net.bondar.interfaces.ObjectChecker
 import net.bondar.models.Place
-import net.bondar.models.PlaceKeeper
 
 /**
  * Iterates temp result object creation process.
  */
 class CalculationIterator {
-    private PlaceKeeper keeper = new PlaceKeeper()
+
     private APIConnection apiConnection
     private ObjectChecker objectChecker
     private JSONConverter jsonConverter
     private int placeCount
     private String latitude
     private String longitude
-
+    private List<Place> placeList = new ArrayList<>()
+    private String pageToken
 
     CalculationIterator(String latitude, String longitude, int placeCount, APIConnection apiConnection, ObjectChecker objectChecker, JSONConverter jsonConverter) {
         this.latitude = latitude
@@ -36,7 +36,7 @@ class CalculationIterator {
      * @return true , if size < count, else - false
      */
     boolean hasNext() {
-        keeper.places.size() < placeCount
+        placeList.size() < placeCount
     }
 
     /**
@@ -45,12 +45,11 @@ class CalculationIterator {
      * @return the list of places
      */
     List<Place> next() {
-        URL url = new GPAUrlBuilderFactory().createUrlBuilder(latitude, longitude, keeper.placeToken).build()
+        URL url = new GPAUrlBuilderFactory().createUrlBuilder(latitude, longitude, pageToken).build()
         try {
             Object response = jsonConverter.toObject(apiConnection.getInputStream(url))
             if (objectChecker.check(response)) {
-                keeper.placeToken = response.next_page_token
-                List<Place> placeList = new ArrayList<>()
+                pageToken = response.next_page_token
                 response.results.each {
                     placeList.add(new Place("${it.name.value}", "${it.geometry.location.lat}", "${it.geometry.location.lng}"))
                 }
@@ -59,15 +58,5 @@ class CalculationIterator {
         } catch (ApplicationException e) {
             throw new LocationCheckerException(e.message)
         }
-    }
-
-    /**
-     * Updates the keeper's list of places.
-     *
-     * @return keeper with updated places
-     */
-    PlaceKeeper updateKeeper() {
-        keeper.places.addAll(next())
-        return keeper
     }
 }
