@@ -22,29 +22,32 @@ class ResultObject {
     /**
      * List of places.
      */
-    final List<Place> places = new ArrayList<>()
+    final List<Place> places
 
-    ResultObject(String status) {
-        this(status, "")
-    }
 
-    ResultObject(String status, def comment = "", String errorMessage) {
-        this.status = status
+    ResultObject(String errorMessage) {
+        this.status = "ERROR"
+        this.comment = ""
         this.errorMessage = errorMessage
+        this.places = new ArrayList<>()
     }
 
-    ResultObject(String status, String comment, String errorMessage) {
+    ResultObject(String status, String comment) {
         this.status = status
         this.comment = comment
-        this.errorMessage = errorMessage
+        this.errorMessage = ""
+        this.places = new ArrayList<>()
+    }
+
+    ResultObject(String status, List<Place> places) {
+        this.status = status
+        this.comment = ""
+        this.errorMessage = ""
+        this.places = places
     }
 
     List<Place> getPlaces() {
         places.clone()
-    }
-
-    void addPlaces(List<Place> places) {
-        this.places.addAll(places)
     }
 
     @Override

@@ -1,12 +1,13 @@
 package net.bondar.impl
 
-import groovy.util.logging.Log
+import groovy.util.logging.Log4j
 import net.bondar.exceptions.ApplicationException
+import org.apache.log4j.Level
 
 /**
  * Loads parameters application parameters.
  */
-@Log
+@Log4j
 class ParameterLoader {
     private def slurper = new ConfigSlurper()
     private def doc
@@ -15,7 +16,8 @@ class ParameterLoader {
         try {
             doc = slurper.parse(new File(configFileName).toURI().toURL())
         } catch (FileNotFoundException e) {
-            log.info("Error while loading configuration file.")
+            log.setLevel(Level.DEBUG)
+            log.debug("Error while loading configuration file.")
             throw new ApplicationException("Error while loading net.bondar.config file:\n${e.message}")
         }
     }
@@ -29,5 +31,4 @@ class ParameterLoader {
     String loadParameter(String paramName) {
         doc."${paramName}"
     }
-
 }

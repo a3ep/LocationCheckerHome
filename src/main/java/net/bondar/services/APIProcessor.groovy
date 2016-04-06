@@ -1,18 +1,18 @@
 package net.bondar.services
 
-import groovy.util.logging.Log
+import groovy.util.logging.Log4j
 import net.bondar.exceptions.LocationCheckerException
 import net.bondar.impl.CalculationIterator
 import net.bondar.impl.GPSDistanceCalculator
 import net.bondar.interfaces.*
-import net.bondar.models.TempResultObject
+import net.bondar.models.InputObject
 
 /**
  * Processes creation of temp result object.
  */
-@Log
+@Log4j
 class APIProcessor implements Processor {
-    private TempResultObject object = new TempResultObject("OK")
+    private InputObject object = new InputObject()
     private String latitude
     private String longitude
     private int placeCount
@@ -32,24 +32,26 @@ class APIProcessor implements Processor {
     }
 
     /**
-     * Processes creation of temp result object.
+     * Processes creation of input object.
      *
-     * @return complete temp result object
+     * @return complete input object
+     * @throws LocationCheckerException
      */
     @Override
-    TempResultObject process() {
+    InputObject process() {
         log.info("Processes places")
         try {
             while (iterator.hasNext()) {
                 object.places.addAll(iterator.next())
                 if (object.places.size() == 0) {
-                    return new TempResultObject("OK", "We could not find any place on the specified coordinates. GPA response status --> ZERO_RESULTS", "")
+                    return new InputObject("OK", "We could not find any place on the specified coordinates. GPA response status --> ZERO_RESULTS")
                 }
             }
+            object.status = "OK"
             object.places = object.places.subList(0, placeCount)
-            setDistanceToPlaces(object)
+            setDistance(object)
         } catch (LocationCheckerException e) {
-            new TempResultObject("ERROR", e.message)
+            new InputObject(e.message)
         }
     }
 
@@ -59,10 +61,12 @@ class APIProcessor implements Processor {
      * @param object temp result object with a list of places in which needs to add distances
      * @return updated temp result object
      */
-    TempResultObject setDistanceToPlaces(TempResultObject object) {
-        object.places.each {
-            it.setDistance(String.format("%.1f", distanceCalculator.calculateDistance(latitude, longitude, it.latitude, it.longitude)) + "м")
+    def setDistance = { obj ->
+        obj.places.each {
+            def dist = distanceCalculator.calculateDistance(latitude, longitude, it.latitude, it.longitude)
+            def formatDist = String.format("%.1f", dist) + "м"
+            it.setDistance(formatDist)
         }
-        return object
+        return obj
     }
 }

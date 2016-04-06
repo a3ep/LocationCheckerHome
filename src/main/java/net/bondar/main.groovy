@@ -17,10 +17,12 @@ try {
     APIConnection apiConnection = new GooglePlacesAPI()
     ObjectChecker objectChecker = new GPAObjectChecker()
     JSONConverter jsonConverter = new GroovyJSONConverter(new JsonBuilder(), new JsonSlurper())
-    ParameterChecker parameterChecker = new ParameterChecker()
+    ParameterVerifier parameterVerifier = new GPASearchParameterVerifier()
+    OptionViewer optionViewer = new CliOptionsViewer()
+    InputVerifier inputVerifier = new InputVerifier(optionViewer, parameterVerifier)
 
-    def service = new APIService(urlBuilderFactory, processorFactory, apiConnection, objectChecker, jsonConverter, parameterChecker)
-    println service.search(service.checkInput(args.size() > 0 ? args : ["-h"]))
+    def service = new APIService(urlBuilderFactory, processorFactory, apiConnection, objectChecker, jsonConverter, parameterVerifier, optionViewer, inputVerifier)
+    service.search(inputVerifier.verifyInput(args.size() > 0 ? args : ["-h"]))
 } catch (Throwable t) {
     t.printStackTrace()
 }

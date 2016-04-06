@@ -7,10 +7,8 @@ import net.bondar.interfaces.UrlBuilder
  */
 abstract class AbstractGPAUrlBuilder implements UrlBuilder {
     ParameterLoader pLoader = new ParameterLoader("config.groovy")
-    private String types = pLoader.loadParameter("placeTypes")
     private final String mainUrlPart = pLoader.loadParameter("placeSearchRequest")
     private final String gpaKey = pLoader.loadParameter("gpaKey")
-    private final String placeTypes = types.substring(1, types.length() - 2).replace(', ', "|")
 
     String getMainUrlPart() {
         return mainUrlPart
@@ -18,10 +16,6 @@ abstract class AbstractGPAUrlBuilder implements UrlBuilder {
 
     String getGpaKey() {
         return gpaKey
-    }
-
-    String getPlaceTypes() {
-        return placeTypes
     }
 
     /**

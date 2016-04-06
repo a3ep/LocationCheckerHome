@@ -2,7 +2,7 @@ package net.bondar.models
 /**
  * Accumulates information in the processing of the request and passes it an ResultObject.
  */
-class TempResultObject {
+class InputObject {
     /**
      * Status of script response, should have the following format: "OK" or "ERROR".
      */
@@ -23,19 +23,21 @@ class TempResultObject {
      */
     private List<Place> places = new ArrayList<>()
 
-    TempResultObject(String status) {
-        this(status, "")
+    InputObject() {
+        this.comment = ""
+        this.errorMessage = ""
     }
 
-    TempResultObject(String status, String errorMessage) {
-        this.status = status
+    InputObject(String errorMessage) {
+        this.status = "ERROR"
+        this.comment = ""
         this.errorMessage = errorMessage
     }
 
-    TempResultObject(String status, String comment, String errorMessage) {
+    InputObject(String status, String comment) {
         this.status = status
         this.comment = comment
-        this.errorMessage = errorMessage
+        this.errorMessage = ""
     }
 
     String getStatus() {
@@ -73,7 +75,7 @@ class TempResultObject {
 
     @Override
     public String toString() {
-        return "TempResultObject{" +
+        return "InputObject{" +
                 "status='" + status + '\'' +
                 ", comment='" + comment + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +

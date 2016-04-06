@@ -1,11 +1,11 @@
 package net.bondar.impl
 
-import groovy.util.logging.Log
+import groovy.util.logging.Log4j
 
 /**
  * Builds Google Places API URL on the basis of page token.
  */
-@Log
+@Log4j
 class PageTokenGPAUrlBuilder extends AbstractGPAUrlBuilder {
     private String pageToken
 

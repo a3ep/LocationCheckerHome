@@ -1,20 +1,16 @@
 package net.bondar.services
 
-import groovy.util.logging.Log
-import net.bondar.exceptions.ApplicationException
+import groovy.util.logging.Log4j
 import net.bondar.impl.GPAObjectChecker
-import net.bondar.impl.ParameterChecker
-import net.bondar.interfaces.APIConnection
-import net.bondar.interfaces.AbstractProcessorFactory
-import net.bondar.interfaces.AbstractUrlBuilderFactory
-import net.bondar.interfaces.JSONConverter
+import net.bondar.impl.InputVerifier
+import net.bondar.interfaces.*
+import net.bondar.models.InputObject
 import net.bondar.models.ResultObject
-import net.bondar.models.TempResultObject
 
 /**
  * Processes the user search requests to obtain result object.
  */
-@Log
+@Log4j
 class APIService {
 
     private AbstractUrlBuilderFactory urlBuilderFactory
@@ -22,39 +18,26 @@ class APIService {
     private APIConnection apiConnection
     private GPAObjectChecker objectChecker
     private JSONConverter jConverter
-    private ParameterChecker paramsChecker
+    private ParameterVerifier paramsVerifier
+    private OptionViewer optionViewer
+    private InputVerifier inputVerifier
 
-    APIService(AbstractUrlBuilderFactory urlBuilderFactory, AbstractProcessorFactory processorFactory, APIConnection apiConnection, GPAObjectChecker objectChecker, JSONConverter jsonConverter, ParameterChecker parameterChecker) {
+    APIService(AbstractUrlBuilderFactory urlBuilderFactory,
+               AbstractProcessorFactory processorFactory,
+               APIConnection apiConnection,
+               GPAObjectChecker objectChecker,
+               JSONConverter jsonConverter,
+               ParameterVerifier parameterVerifier,
+               OptionViewer optionViewer,
+               InputVerifier inputVerifier) {
         this.urlBuilderFactory = urlBuilderFactory
         this.processorFactory = processorFactory
         this.apiConnection = apiConnection
         this.objectChecker = objectChecker
         this.jConverter = jsonConverter
-        this.paramsChecker = parameterChecker
-    }
-
-    /**
-     * Verifies provided arguments.
-     *
-     * @param params request parameters: latitude, longitude and max count of places
-     * @return map with coordinates and count of places
-     */
-    def checkInput(def params) {
-        def options
-        CliBuilder cli = new CliBuilder(usage: 'APIService.groovy -p [params]', header: 'Options:')
-        cli.h(longOpt: "help", 'Print this message')
-        cli.p(longOpt: "param", args: 3, valueSeparator: ';', argName: 'latitude, longitude, maxResultCount', 'Searching location with given coordinates. Negative numbers looks like --34.586')
-        options = cli.parse(params)
-        if (!options) throw new ApplicationException("Error empty arguments. Please check your input.")
-        if (options.h) {
-            cli.usage()
-            System.exit(0)
-        } else if (!options.p) {
-            cli.usage()
-            throw new ApplicationException("Wrong parameters or options. Please check your input.")
-        } else if (paramsChecker.check(options.ps)) {
-            ["latitude": "${options.ps[0].trim()}", "longitude": "${options.ps[1].trim()}", "count": "${options.ps[2]}"]
-        }
+        this.paramsVerifier = parameterVerifier
+        this.optionViewer = optionViewer
+        this.inputVerifier = inputVerifier
     }
 
     /**
@@ -64,6 +47,9 @@ class APIService {
      * @return result object with places or with an error message in JSON format
      */
     Object search(def request) {
+        if (request instanceof ResultObject) {
+            return convertToJSON(request)
+        }
         String latitude = request.latitude.replace("--", "-")
         String longitude = request.longitude.replace("--", "-")
         def placeCount = Integer.parseInt(request.count)
@@ -73,22 +59,20 @@ class APIService {
     }
 
     /**
-     * Builds result object on the basis of TempResultObject.
+     * Builds result object on the basis of InputObject.
      *
      * @param tempResultObject the object witch contains required information
      * @return complete result object
      */
-    ResultObject buildResultObject(TempResultObject tempResultObject) {
+    ResultObject buildResultObject(InputObject inputObject) {
         log.info("Builds result object\n")
-        if (tempResultObject.status == 'OK') {
-            if (tempResultObject.comment != "") {
-                return new ResultObject(tempResultObject.status, tempResultObject.comment, "")
+        if (inputObject.status == 'OK') {
+            if (inputObject.comment) {
+                return new ResultObject(inputObject.status, inputObject.comment)
             }
-            ResultObject resultObject = new ResultObject("OK")
-            resultObject.addPlaces(tempResultObject.places)
-            return resultObject
+            return new ResultObject(inputObject.status, inputObject.places)
         } else {
-            new ResultObject(tempResultObject.status, tempResultObject.errorMessage)
+            return new ResultObject(inputObject.errorMessage)
         }
     }
 
@@ -100,6 +84,8 @@ class APIService {
      */
     Object convertToJSON(Object object) {
         log.info("Converting result object to JSON\n")
-        jConverter.toJson(object)
+        def result = jConverter.toJson(object)
+        log.info("The result of serching is --> ${result.toString()}")
+        return result
     }
 }

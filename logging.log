@@ -1,0 +1,57 @@
+
+
+2016-04-06 12:46:20 INFO  GPASearchParameterVerifier:? - Checks input parameters
+
+2016-04-06 12:46:20 DEBUG GPASearchParameterVerifier:? - Error while checking input arguments -> Latitude.
+2016-04-06 12:46:20 INFO  APIService:? - Converting result object to JSON
+
+2016-04-06 12:46:48 INFO  GPASearchParameterVerifier:? - Checks input parameters
+
+2016-04-06 12:46:48 INFO  APIService:? - Input parameters -->
+latitude=48.4644455
+longitude=35.0475775
+placeCount=3
+
+2016-04-06 12:46:48 INFO  APIProcessor:? - Processes places
+2016-04-06 12:46:48 INFO  CoordinatesGPAUrlBuilder:? - Builds Google Places URL on the basis of geographical coordinates
+
+2016-04-06 12:46:48 INFO  GooglePlacesAPI:? - Receives response object from Google Places API
+
+2016-04-06 12:46:49 INFO  APIService:? - Builds result object
+
+2016-04-06 12:46:49 INFO  APIService:? - Converting result object to JSON
+
+2016-04-06 12:49:12 INFO  GPASearchParameterVerifier:? - Checks input parameters
+
+2016-04-06 12:49:12 INFO  APIService:? - Input parameters -->
+latitude=48.4644455
+longitude=35.0475775
+placeCount=3
+
+2016-04-06 12:49:12 INFO  APIProcessor:? - Processes places
+2016-04-06 12:49:12 INFO  CoordinatesGPAUrlBuilder:? - Builds Google Places URL on the basis of geographical coordinates
+
+2016-04-06 12:49:12 INFO  GooglePlacesAPI:? - Receives response object from Google Places API
+
+2016-04-06 12:49:13 INFO  APIService:? - Builds result object
+
+2016-04-06 12:49:13 INFO  APIService:? - Converting result object to JSON
+
+2016-04-06 12:49:13 INFO  APIService:? - [ResultObject{status='OK', comment='', errorMessage='', places=[Place{title=Lacoste, latitude=48.4644455, longitude=35.04757759999999, distance=0.0м}, Place{title=FRIENDS’TIME New York, latitude=48.4645071, longitude=35.0475992, distance=7.0м}, Place{title=Sushiya, latitude=48.4644615, longitude=35.04743279999999, distance=10.8м}]}]
+2016-04-06 12:50:18 INFO  GPASearchParameterVerifier:? - Checks input parameters
+
+2016-04-06 12:50:18 INFO  APIService:? - Input parameters -->
+latitude=48.4644455
+longitude=35.0475775
+placeCount=3
+
+2016-04-06 12:50:18 INFO  APIProcessor:? - Processes places
+2016-04-06 12:50:19 INFO  CoordinatesGPAUrlBuilder:? - Builds Google Places URL on the basis of geographical coordinates
+
+2016-04-06 12:50:19 INFO  GooglePlacesAPI:? - Receives response object from Google Places API
+
+2016-04-06 12:50:20 INFO  APIService:? - Builds result object
+
+2016-04-06 12:50:20 INFO  APIService:? - Converting result object to JSON
+
+2016-04-06 12:50:20 INFO  APIService:? - Result of serching is --> [ResultObject{status='OK', comment='', errorMessage='', places=[Place{title=Lacoste, latitude=48.4644455, longitude=35.04757759999999, distance=0.0м}, Place{title=FRIENDS’TIME New York, latitude=48.4645071, longitude=35.0475992, distance=7.0м}, Place{title=Sushiya, latitude=48.4644615, longitude=35.04743279999999, distance=10.8м}]}]

@@ -32,6 +32,4 @@ class PlaceDistanceCalculator implements DistanceCalculator {
         def dist = earthRadius * c
         return dist
     }
-
-
 }

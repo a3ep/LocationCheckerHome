@@ -1,6 +1,6 @@
 package net.bondar.interfaces
 
-import net.bondar.models.TempResultObject
+import net.bondar.models.InputObject
 
 /**
  * Processes creation of temp result object.
@@ -12,5 +12,5 @@ interface Processor {
      *
      * @return complete temp result object
      */
-    TempResultObject process()
+    InputObject process()
 }
