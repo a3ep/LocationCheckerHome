@@ -1,3 +1,5 @@
+package net.bondar
+
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import net.bondar.exceptions.ApplicationException
