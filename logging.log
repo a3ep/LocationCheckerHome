@@ -55,3 +55,36 @@ placeCount=3
 2016-04-06 12:50:20 INFO  APIService:? - Converting result object to JSON
 
 2016-04-06 12:50:20 INFO  APIService:? - Result of serching is --> [ResultObject{status='OK', comment='', errorMessage='', places=[Place{title=Lacoste, latitude=48.4644455, longitude=35.04757759999999, distance=0.0м}, Place{title=FRIENDS’TIME New York, latitude=48.4645071, longitude=35.0475992, distance=7.0м}, Place{title=Sushiya, latitude=48.4644615, longitude=35.04743279999999, distance=10.8м}]}]
+2016-04-07 09:04:59 INFO  GPASearchParameterVerifier:? - Checks input parameters
+
+2016-04-07 09:04:59 INFO  APIService:? - Input parameters -->
+latitude=48.4644455
+longitude=35.0475775
+placeCount=3
+
+2016-04-07 09:04:59 INFO  APIProcessor:? - Processes places
+2016-04-07 09:04:59 DEBUG ParameterLoader:? - Error while loading configuration file.
+2016-04-07 09:04:59 DEBUG CalculationIterator:? - Error while using iterator.
+2016-04-07 09:04:59 INFO  APIService:? - Builds result object
+
+2016-04-07 09:04:59 INFO  APIService:? - Converting result object to JSON
+
+2016-04-07 09:04:59 INFO  APIService:? - The result of serching is --> [ResultObject{status='ERROR', comment='', errorMessage='Error while loading net.bondar.config file:
+/home/vsevolod/MyIdeaProjects/LocationCheckerHome/src/main/java/net/bondar/config.groovy (No such file or directory)', places=[]}]
+2016-04-07 09:06:48 INFO  GPASearchParameterVerifier:? - Checks input parameters
+
+2016-04-07 09:06:48 INFO  APIService:? - Input parameters -->
+latitude=48.4644455
+longitude=35.0475775
+placeCount=3
+
+2016-04-07 09:06:48 INFO  APIProcessor:? - Processes places
+2016-04-07 09:06:48 INFO  CoordinatesGPAUrlBuilder:? - Builds Google Places URL on the basis of geographical coordinates
+
+2016-04-07 09:06:48 INFO  GooglePlacesAPI:? - Receives response object from Google Places API
+
+2016-04-07 09:06:49 INFO  APIService:? - Builds result object
+
+2016-04-07 09:06:49 INFO  APIService:? - Converting result object to JSON
+
+2016-04-07 09:06:49 INFO  APIService:? - The result of serching is --> [ResultObject{status='OK', comment='', errorMessage='', places=[Place{title=Lacoste, latitude=48.4644455, longitude=35.04757759999999, distance=0.0м}, Place{title=FRIENDS’TIME New York, latitude=48.4645071, longitude=35.0475992, distance=7.0м}, Place{title=Sushiya, latitude=48.4644615, longitude=35.04743279999999, distance=10.8м}]}]
